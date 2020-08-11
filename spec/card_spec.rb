@@ -15,8 +15,10 @@ describe Card do
       expect {subject.top_up(1)}.to change {subject.balance}.by (1)
     end
 
-    it 'sets a maxiumum top up limit of £90' do
-      expect {subject.top_up(91)}.to raise_error "Cannot top up: Maximum limit is £90"
+    it 'raises an error if the maxiumum balance is exceeded' do
+      max_balance = Card::MAXIMUM_BALANCE
+      subject.top_up(max_balance)
+      expect {subject.top_up(1)}.to raise_error "Cannot top up: Maximum balance of £#{max_balance} exceeded"
     end
   end
 

@@ -2,6 +2,8 @@ class Card
 
   attr_reader :balance
 
+  MAXIMUM_BALANCE = 90
+
   def initialize
 
     @balance = 0
@@ -9,7 +11,7 @@ class Card
   end
 
   def top_up(amount)
-    raise "Cannot top up: Maximum limit is £90" if amount > 90
+    raise "Cannot top up: Maximum balance of £#{MAXIMUM_BALANCE} exceeded" if @balance + amount > MAXIMUM_BALANCE
     @balance += amount
   end
 
