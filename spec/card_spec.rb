@@ -22,21 +22,10 @@ describe Card do
     end
 end
   
-  describe '#deduct' do
-
-    it 'is expected to respond to deduct with 1 argument' do
-      expect(subject).to respond_to(:deduct).with(1).argument
-    end
-
-    it 'deducts from the balance' do
-      subject.top_up(Card::MAXIMUM_BALANCE)
-      expect {subject.deduct(1)}.to change {subject.balance}.by (-1)
-    end
-
-  end
-
   describe '#touch_in' do
-     
+  
+  let(:station) {double :station}
+
   before do
     subject.balance = Card::MINIMUM_FARE
   end
@@ -46,27 +35,35 @@ end
     end
 
     it 'reports that the card is in use' do
-      expect {subject.touch_in}.to change {subject.in_journey?}.to true
+      expect {subject.touch_in(station)}.to change {subject.in_journey?}.to true
     end
 
     it 'can touch in' do
-      subject.touch_in
+      subject.touch_in(station)
       expect(subject).to be_in_journey
     end
 
     it 'allows touch in if card balance is sufficient for a single journey' do
-      subject.touch_in
+      subject.touch_in(station)
       expect(subject).to be_in_journey
      end
 
     it 'raises an error if insufficient funds on card for a single journey' do
       subject.balance = 0
-      expect {subject.touch_in}.to raise_error "insufficient funds on card"
+      expect {subject.touch_in(station)}.to raise_error "insufficient funds on card"
+    end
+
+    it 'stores the entry station after touch in' do
+      station = double(:station)
+      subject.touch_in(station)
+      expect(subject.entry_station).to eq station
     end
 
   end
 
   describe '#touch_out' do
+    
+    let(:station) {double :station}
 
     it 'responds to touch_out' do
       expect(subject).to respond_to :touch_out
@@ -77,9 +74,15 @@ end
 
     it 'can touch_out' do         
       subject.balance = Card::MINIMUM_FARE
-      subject.touch_in
+      subject.touch_in(station)
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+
+    it 'deducts from the balance when touch out' do
+      subject.balance = Card::MINIMUM_FARE
+      subject.touch_in(station)
+      expect {subject.touch_out }.to change {subject.balance}.by -(Card::MINIMUM_FARE)
     end
   end
 
@@ -89,7 +92,6 @@ end
     end
     
   end
-
-  
+ 
 
 end
