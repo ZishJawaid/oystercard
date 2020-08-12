@@ -1,8 +1,9 @@
 class Card
 
-  attr_reader :balance
+  attr_accessor :balance
 
   MAXIMUM_BALANCE = 90
+  MINIMUM_FARE = 1
 
   def initialize
 
@@ -20,6 +21,7 @@ class Card
   end
 
   def touch_in
+    raise "insufficient funds on card" if @balance < MINIMUM_FARE
     @in_use = true
   end
 

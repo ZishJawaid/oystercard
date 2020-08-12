@@ -36,6 +36,11 @@ end
   end
 
   describe '#touch_in' do
+     
+  before do
+    subject.balance = Card::MINIMUM_FARE
+  end
+   
     it 'responds to touch in' do
       expect(subject).to respond_to :touch_in
     end
@@ -43,13 +48,26 @@ end
     it 'reports that the card is in use' do
       expect {subject.touch_in}.to change {subject.in_journey?}.to true
     end
+
     it 'can touch in' do
       subject.touch_in
       expect(subject).to be_in_journey
     end
+
+    it 'allows touch in if card balance is sufficient for a single journey' do
+      subject.touch_in
+      expect(subject).to be_in_journey
+     end
+
+    it 'raises an error if insufficient funds on card for a single journey' do
+      subject.balance = 0
+      expect {subject.touch_in}.to raise_error "insufficient funds on card"
+    end
+
   end
 
   describe '#touch_out' do
+
     it 'responds to touch_out' do
       expect(subject).to respond_to :touch_out
     end
@@ -57,7 +75,8 @@ end
       expect {subject.touch_out}.to change {subject.in_journey?}.to false
     end
 
-    it 'can touch_out' do
+    it 'can touch_out' do         
+      subject.balance = Card::MINIMUM_FARE
       subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
