@@ -29,10 +29,48 @@ end
     end
 
     it 'deducts from the balance' do
-      subject.top_up(90)
+      subject.top_up(Card::MAXIMUM_BALANCE)
       expect {subject.deduct(1)}.to change {subject.balance}.by (-1)
     end
 
   end
+
+  describe '#touch_in' do
+    it 'responds to touch in' do
+      expect(subject).to respond_to :touch_in
+    end
+
+    it 'reports that the card is in use' do
+      expect {subject.touch_in}.to change {subject.in_journey?}.to true
+    end
+    it 'can touch in' do
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+  end
+
+  describe '#touch_out' do
+    it 'responds to touch_out' do
+      expect(subject).to respond_to :touch_out
+    end
+    it'reports that the card is no longer in use' do
+      expect {subject.touch_out}.to change {subject.in_journey?}.to false
+    end
+
+    it 'can touch_out' do
+      subject.touch_in
+      subject.touch_out
+      expect(subject).not_to be_in_journey
+    end
+  end
+
+  describe '#in_journey?' do
+    it 'responds to in_journey?' do
+      expect(subject).to respond_to :in_journey?
+    end
+    
+  end
+
+  
 
 end
