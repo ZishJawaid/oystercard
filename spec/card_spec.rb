@@ -2,8 +2,15 @@ require 'card'
 
 describe Card do
 
+  let(:entry_station) {double :entry_station}
+  let(:exit_station) {double :exit_station}
+
   it 'expects a card to have an initial balance of zero' do
     expect(subject.balance).to eq(0)
+  end
+
+  it 'initializes with an empty list of journeys' do
+    expect(subject.journeys).to be_empty
   end
 
   describe '#top_up' do
@@ -24,7 +31,7 @@ end
   
   describe '#touch_in' do
   
-  let(:station) {double :station}
+  let(:entry_station) {double :entry_station}
 
   before do
     subject.balance = Card::MINIMUM_FARE
@@ -34,63 +41,42 @@ end
       expect(subject).to respond_to :touch_in
     end
 
-    it 'reports that the card is in use' do
-      expect {subject.touch_in(station)}.to change {subject.in_journey?}.to true
-    end
-
-    it 'can touch in' do
-      subject.touch_in(station)
-      expect(subject).to be_in_journey
-    end
-
-    it 'allows touch in if card balance is sufficient for a single journey' do
-      subject.touch_in(station)
-      expect(subject).to be_in_journey
-     end
-
     it 'raises an error if insufficient funds on card for a single journey' do
       subject.balance = 0
-      expect {subject.touch_in(station)}.to raise_error "insufficient funds on card"
-    end
-
-    it 'stores the entry station after touch in' do
-      station = double(:station)
-      subject.touch_in(station)
-      expect(subject.entry_station).to eq station
+      expect {subject.touch_in(entry_station)}.to raise_error "insufficient funds on card"
     end
 
   end
 
   describe '#touch_out' do
-    
-    let(:station) {double :station}
+    before do
+      subject.balance = Card::MINIMUM_FARE
+    end
 
     it 'responds to touch_out' do
       expect(subject).to respond_to :touch_out
     end
-    it'reports that the card is no longer in use' do
-      expect {subject.touch_out}.to change {subject.in_journey?}.to false
-    end
-
-    it 'can touch_out' do         
-      subject.balance = Card::MINIMUM_FARE
-      subject.touch_in(station)
-      subject.touch_out
-      expect(subject).not_to be_in_journey
-    end
-
+ 
     it 'deducts from the balance when touch out' do
-      subject.balance = Card::MINIMUM_FARE
-      subject.touch_in(station)
-      expect {subject.touch_out }.to change {subject.balance}.by -(Card::MINIMUM_FARE)
+      subject.touch_in(entry_station)
+      expect {subject.touch_out(exit_station)}.to change {subject.balance}.by -(Card::MINIMUM_FARE)
     end
+
+    
   end
 
-  describe '#in_journey?' do
-    it 'responds to in_journey?' do
-      expect(subject).to respond_to :in_journey?
+  context 'when journey complete' do
+    before do
+      subject.balance = Card::MINIMUM_FARE
     end
-    
+
+    let(:journey) { {entry_station: entry_station, exit_station: exit_station } }
+
+    it 'stores a journey' do
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      expect(subject.journeys).to include journey
+    end
   end
  
 

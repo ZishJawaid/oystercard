@@ -1,13 +1,13 @@
 class Card
 
-  attr_accessor :balance
-  attr_reader :entry_station
+  attr_accessor :balance, :journeys
   
   MAXIMUM_BALANCE = 90
   MINIMUM_FARE = 1
 
   def initialize
     @balance = 0
+    @journeys ={}
   end
 
   def top_up(amount)
@@ -15,21 +15,17 @@ class Card
     @balance += amount
   end
 
-  def touch_in(station)
+  def touch_in(entry_station)
     raise "insufficient funds on card" if @balance < MINIMUM_FARE
-    @entry_station = station
-    @in_use = true
+    @journeys[:entry_station] = entry_station 
   end
 
-  def touch_out
+  def touch_out(exit_station)
     deduct(MINIMUM_FARE)
-    @in_use = false
+    @journeys[:exit_station] = exit_station 
   end
 
-  def in_journey?
-    @in_use
-  end
-
+  
 private
 
   def deduct(amount)
