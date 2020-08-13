@@ -11,11 +11,15 @@ describe Journey do
   end
 
 
-  # let(:journey) { {entry_station: entry_station, exit_station: exit_station } }
+  it 'starts a journey' do
+    #oyster = Card.new
+    expect(subject.journey_start(entry_station)).to eq true
+  end
+  # let(:journey)  { {entry_station: entry_station, exit_station: exit_station } }
 
   #   it 'stores a journey' do
-  #     subject.touch_in(entry_station)
-  #     subject.touch_out(exit_station)
+  #     subject.journey_start(entry_station)
+  #     subject.journey_end(exit_station)
   #     expect(subject.journeys).to include journey
   #   end
 end

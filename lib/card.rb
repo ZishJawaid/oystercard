@@ -15,12 +15,12 @@ class Card
     @balance += amount
   end
 
-  def touch_in(entry_station)
+  def touch_in
     raise "insufficient funds on card" if @balance < MINIMUM_FARE
      
   end
 
-  def touch_out(exit_station)
+  def touch_out
     deduct(MINIMUM_FARE)
   end
 
