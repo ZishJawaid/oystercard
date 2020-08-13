@@ -9,9 +9,7 @@ describe Card do
     expect(subject.balance).to eq(0)
   end
 
-  it 'initializes with an empty list of journeys' do
-    expect(subject.journeys).to be_empty
-  end
+  
 
   describe '#top_up' do
     it  'is expected to respond to top_up with 1 argument' do
@@ -70,13 +68,7 @@ end
       subject.balance = Card::MINIMUM_FARE
     end
 
-    let(:journey) { {entry_station: entry_station, exit_station: exit_station } }
-
-    it 'stores a journey' do
-      subject.touch_in(entry_station)
-      subject.touch_out(exit_station)
-      expect(subject.journeys).to include journey
-    end
+    
   end
  
 
