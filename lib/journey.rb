@@ -1,17 +1,16 @@
 class Journey
 
-attr_reader :journeys, :start
+attr_reader :journeys
 
   def initialize
-    @journeys = []
+    @journeys = {}
     @start
   end
 
- def journey_start(entry_station = "entry_station")
-  @start = true
+ def start(entry_station = "entry_station")
+ @journeys[:entry_station] = entry_station
+ p @journeys
  end
-# @journeys[:entry_station] = entry_station
-
 # @journeys[:exit_station] = exit_station 
 
 end

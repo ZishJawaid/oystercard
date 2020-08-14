@@ -11,9 +11,19 @@ describe Journey do
   end
 
 
-  it 'starts a journey' do
+  #it 'starts a journey' do
     #oyster = Card.new
-    expect(subject.journey_start(entry_station)).to eq true
+   # expect(subject.journey_start(entry_station)).to eq true
+  #end
+
+  it { respond_to(:start).with(1).argument }
+
+  describe '#start' do
+     let(:entry_station) { double :entry_station }
+    it 'will add the entry station to the hash' do
+      subject.start(entry_station)
+      expect(subject.journeys).to include(:entry_station => entry_station)
+    end
   end
   # let(:journey)  { {entry_station: entry_station, exit_station: exit_station } }
 
