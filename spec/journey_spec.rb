@@ -20,11 +20,23 @@ describe Journey do
 
   describe '#start' do
      let(:entry_station) { double :entry_station }
-    it 'will add the entry station to the hash' do
+    it 'will add the entry station to the journey log' do
       subject.start(entry_station)
       expect(subject.journeys).to include(:entry_station => entry_station)
     end
   end
+
+  describe '#finish' do
+    it 'wii add the exit station to the journey log' do
+      exit_station = double 
+      entry_station = double
+      subject.start(entry_station) 
+      subject.finish(exit_station)
+      expect(subject.journeys).to include(:entry_station => entry_station, :exit_station => exit_station)
+    end
+  end
+
+   
   # let(:journey)  { {entry_station: entry_station, exit_station: exit_station } }
 
   #   it 'stores a journey' do
