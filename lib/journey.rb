@@ -1,5 +1,7 @@
 class Journey
 
+PENALTY_FARE = 6
+
 attr_reader :journeys
 
   def initialize
@@ -16,11 +18,17 @@ attr_reader :journeys
   end
 
   def fare
-    if @journeys.values_at(:entry_station, :exit_station).all?
+    if journey_complete?
       Card::MINIMUM_FARE
     else
-      6
+      PENALTY_FARE
     end
   end
+
+private
+
+def journey_complete?
+  @journeys.values_at(:entry_station, :exit_station).all?
+end
 
 end

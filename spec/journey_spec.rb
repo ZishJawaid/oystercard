@@ -55,7 +55,7 @@ describe Journey do
       subject.start(entry_station)
       subject.finish
       subject.fare
-      expect(subject.fare).to eq 6
+      expect(subject.fare).to eq Journey::PENALTY_FARE
     end
 
 
